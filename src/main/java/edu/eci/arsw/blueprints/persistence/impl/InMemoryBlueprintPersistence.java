@@ -5,18 +5,24 @@
  */
 package edu.eci.arsw.blueprints.persistence.impl;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Repository;
+
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author hcadavid
  */
+@Repository
 public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     private final Map<Tuple<String,String>,Blueprint> blueprints=new HashMap<>();
@@ -41,7 +47,36 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     @Override
     public Blueprint getBlueprint(String author, String bprintname) throws BlueprintNotFoundException {
-        return blueprints.get(new Tuple<>(author, bprintname));
+        Blueprint bp = blueprints.get(new Tuple<>(author, bprintname));
+        if (bp==null) {
+            throw new BlueprintNotFoundException("Blueprint not found: " + author + ", " + bprintname);
+        }
+        return bp;
+    }
+
+    /**
+     * Return all blueprints in the store (helper)
+     */
+    public Set<Blueprint> getAllBlueprints(){
+        return new HashSet<>(blueprints.values());
+    }
+
+    /**
+     * Get all the blueprints of an author
+     * @param author Author's name
+     */
+    @Override
+    public Set<Blueprint> getBlueprintByAuthor(String author) throws BlueprintNotFoundException {
+        Set<Blueprint> blueprintsByAuthor = new HashSet<>();
+        for (Tuple<String, String> key : blueprints.keySet()) {
+            if (key.o1.equals(author)) {
+                blueprintsByAuthor.add(blueprints.get(key));
+            }
+        }
+        if (blueprintsByAuthor.isEmpty()) {
+            throw new BlueprintNotFoundException("No blueprints found for author: " + author);
+        }
+        return blueprintsByAuthor;
     }
 
     
