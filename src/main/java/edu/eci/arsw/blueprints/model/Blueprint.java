@@ -7,6 +7,25 @@ import java.util.List;
 import java.util.Objects;
 
 
+/**
+ * Represents a blueprint consisting of an author, a name, and a list of points.
+ * <p>
+ * Blueprints are used to model drawings or designs, where each point represents
+ * a coordinate in the blueprint. The class provides constructors for creating
+ * blueprints with or without initial points, and methods for accessing and
+ * modifying blueprint properties.
+ * </p>
+ *
+ * <p>
+ * Example usage:
+ * <pre>
+ *     Point[] points = {new Point(1, 2), new Point(3, 4)};
+ *     Blueprint bp = new Blueprint("AuthorName", "BlueprintName", points);
+ * </pre>
+ * </p>
+ *
+ * @author diego
+ */
 public class Blueprint {
 
     private String author=null;

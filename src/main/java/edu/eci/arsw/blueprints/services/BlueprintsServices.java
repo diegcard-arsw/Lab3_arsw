@@ -23,53 +23,54 @@ import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
  */
 @Service
 public class BlueprintsServices {
-   
+
     @Autowired
-    BlueprintsPersistence bpp=null;
-    
+    BlueprintsPersistence bpp = null;
+
     @Autowired
-    BlueprintFilter blueprintFilter=null;
-    
-    public void addNewBlueprint(Blueprint bp){
+    BlueprintFilter blueprintFilter = null;
+
+    public void addNewBlueprint(Blueprint bp) {
         try {
             bpp.saveBlueprint(bp);
         } catch (BlueprintPersistenceException e) {
             throw new RuntimeException(e);
         }
     }
-    
-    public Set<Blueprint> getAllBlueprints(){
+
+    public Set<Blueprint> getAllBlueprints() {
         // Not implemented in persistence layer yet
         throw new UnsupportedOperationException("getAllBlueprints not implemented");
     }
-    
+
     /**
-     * 
+     *
      * @param author blueprint's author
      * @param name blueprint's name
-     * @return the blueprint of the given name created by the given author (filtered)
+     * @return the blueprint of the given name created by the given author
+     * (filtered)
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
-    public Blueprint getBlueprint(String author,String name) throws BlueprintNotFoundException{
+    public Blueprint getBlueprint(String author, String name) throws BlueprintNotFoundException {
         Blueprint originalBlueprint = bpp.getBlueprint(author, name);
         return blueprintFilter.filter(originalBlueprint);
     }
-    
+
     /**
-     * 
+     *
      * @param author blueprint's author
      * @return all the blueprints of the given author (filtered)
      * @throws BlueprintNotFoundException if the given author doesn't exist
      */
-    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException {
         Set<Blueprint> originalBlueprints = bpp.getBlueprintByAuthor(author);
         Set<Blueprint> filteredBlueprints = new HashSet<>();
-        
+
         for (Blueprint bp : originalBlueprints) {
             filteredBlueprints.add(blueprintFilter.filter(bp));
         }
-        
+
         return filteredBlueprints;
     }
-    
+
 }
